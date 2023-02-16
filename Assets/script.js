@@ -19,7 +19,7 @@ const retinaUrl =
 // Add map tiles layer. Set 20 as the maximal zoom and provide map data attribution.
 L.tileLayer(isRetina ? retinaUrl : baseUrl, {
   attribution:
-    'Powered by <a href="https://www.geoapify.com/" target="_blank">Geoapify</a> | <a href="https://openmaptiles.org/" rel="nofollow" target="_blank">(c) OpenMapTiles</a> <a href="https://www.openstreetmap.org/copyright" rel="nofollow" target="_blank">(c) OpenStreetMap</a> contributors',
+    'Powered by <a href="https://www.geoapify.com/" target="_blank">Geoapify</a> | <a       href="https://openmaptiles.org/" rel="nofollow" target="_blank">(c) OpenMapTiles</a> <a href="https://www.openstreetmap.org/copyright" rel="nofollow" target="_blank">(c) OpenStreetMap</a> contributors',
   apiKey: myapiKey,
   maxZoom: 20,
   id: "osm-bright",
@@ -99,18 +99,18 @@ function brew(lat, long) {
       for (const brewery of data) {
         const breweryLi = document.createElement("li");
 
-        breweryLi.innerHTML = `<span class="business-name">${brewery.name}</span> (<span class="brewery-type">${brewery.brewery_type}</span>)<div>Address:<div>${brewery.street}, ${brewery.city}, ${brewery.state} ${brewery.postal_code}
-       
-       
-       
-        <div>Phone: <a href="tel:Phone${brewery.phone}" >${brewery.phone}</a></div>
-       
-       
-       
-       <div> <a href="${brewery.website_url}">${brewery.website_url}</a>
-       </div>`;
+          breweryLi.innerHTML = 
+          `<span class="business-name">${brewery.name}</span>
+          (<span class="brewery-type">${brewery.brewery_type}</span>)
+          Address:${brewery.street}, 
+          ${brewery.city},
+          ${brewery.state}
+          ${brewery.postal_code}
+          
+          <div>Phone: <a href="tel:Phone${brewery.phone}" >${brewery.phone.replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3')}</a></div>
+          <div> <a href="${brewery.website_url}">${brewery.website_url}</a></div>`;
 
-        breweriesUl.appendChild(breweryLi);
+          breweriesUl.appendChild(breweryLi);
 
       }
     });
@@ -152,16 +152,18 @@ function entertainment(id) {
    //if phone number, then display phone number
    if (feature.properties.datasource.raw.phone) {
     const entertainmentPhone = document.createElement("li");
+    const numberLayout = feature.properties.datasource.raw.phone.replace(/\+1|\D/g, '').replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
+    
     entertainmentPhone.innerHTML +=
       " Phone:" +
       '<a href="tel:' +
-      feature.properties.datasource.raw.phone +
+      numberLayout +
       '">' +
-      feature.properties.datasource.raw.phone +
+      numberLayout +
       "</a>";
     entertainmentUl.appendChild(entertainmentPhone);
     entertainmentUl.appendChild(entertainmentWebsite);
-  }
+}
 
       }
 
@@ -212,12 +214,13 @@ function hotel(id) {
             );
 
           if (feature.properties.datasource.raw.phone) {
+            const numberLayout = feature.properties.datasource.raw.phone.replace(/\+1|\D/g, '').replace(/(\d{3})(\d{3})(\d{4})/, '($1) $2-$3');
             hotelLi.innerHTML +=
               "<br> Phone:" +
               '<a href="tel:' +
-              feature.properties.datasource.raw.phone +
+              numberLayout +
               '">' +
-              feature.properties.datasource.raw.phone.replace("+1", "") +
+              numberLayout +
               "</a>";
             hotelUl.appendChild(hotelLi);
           }
